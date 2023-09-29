@@ -1,0 +1,25 @@
+name: drupal-base
+recipe: drupal10
+config:
+  webroot: docroot
+services:
+  appserver:
+    build:
+      - composer install
+  pma:
+    type: phpmyadmin
+    hosts:
+      - database
+    ssl: true
+    sslExpose: true
+proxy:
+  pma:
+    - 'pma.drupal-base.lndo.site'
+tooling:
+  drush:
+    service: appserver
+    env:
+      DRUSH_OPTIONS_URI: 'https://drupal-base.lndo.site'
+  drupal:
+    service: appserver
+    cmd: /app/vendor/drupal/console/bin/drupal
